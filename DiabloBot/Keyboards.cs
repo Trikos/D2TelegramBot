@@ -81,7 +81,7 @@ namespace DiabloBot
                 new[]
                 {InlineKeyboardButton.WithCallbackData("Level: " + status.Level)},
                 new[]
-                {InlineKeyboardButton.WithCallbackData("Deaths" + status.Deaths)},
+                {InlineKeyboardButton.WithCallbackData("Deaths: " + status.Deaths)},
                 new[]
                 {InlineKeyboardButton.WithCallbackData("Runs: " + status.Runs)},
                 new[]
