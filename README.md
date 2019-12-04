@@ -13,6 +13,6 @@ Go to start and type "Change User Account Control settings", open it and slide d
 If you don't want to start and stop the D2Bot from Telegram bot just skip step 5 or if you know some other methods to avoid the step 5, please share with me so I can implement it
 
 Thanks to:
--Kapatona to help me find the function to log .png of item picked up
+- Kapatona to help me find the function to log .png of item picked up
 
 GatorBot Version 0.2.0
