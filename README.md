@@ -5,7 +5,7 @@
 2. Also you need to create a bot in Telegram using @BotFather in order to obtain the bot TOKEN to insert in the program when it asks
 3. After you finished the setup, the program will wait that you send a random message ("Hi", "Hello") to the bot and then it will appear the text "Running...", now you can minimize it and enjoy it
 4. You MUST start it as Administrator if you want be able to start and stop from Telegram bot
-5 Also you need to disable the notifications prompt when you try to open a program that requires Admin permission
+5. Also you need to disable the notifications prompt when you try to open a program that requires Admin permission
 Go to start and type "Change User Account Control settings", open it and slide down to "Never notifiy"
 
 ![](https://i.imgur.com/XaNyR3J.png)
