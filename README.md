@@ -15,4 +15,4 @@ If you don't want to start and stop the D2Bot from Telegram bot just skip step 5
 Thanks to:
 - Kapatona to help me find the function to log .png of item picked up
 
-GatorBot Version 0.2.0
+(GatorBot) Version 0.2.0)
