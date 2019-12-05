@@ -63,7 +63,22 @@ namespace DiabloBot
             }
 
             //Init Profile            
-            profile = JsonConvert.DeserializeObject<Profile>(File.ReadAllText(data.PathToJsonProfile));
+            //Create List of Schedule and get all schedule existing
+            List<Profile> profiles = new List<Profile>();
+
+            int counter = 0;
+            string line;
+
+            // Read the file and store it line by line.  
+            System.IO.StreamReader file = new System.IO.StreamReader(data.PathToJsonProfile);
+            while ((line = file.ReadLine()) != null)
+            {
+                profiles.Add(JsonConvert.DeserializeObject<Profile>(line));
+                counter++;
+            }
+
+            file.Close();
+            //profile = JsonConvert.DeserializeObject<Profile>(File.ReadAllText(data.PathToJsonProfile));
 
             //diabloChecker = new DiabloChecker(data);
             //diabloChecker.ReadStatus();
@@ -194,15 +209,14 @@ namespace DiabloBot
             // When Click on Inline Keyboard this method will get call
             switch (callbackQuery.Data)
             {
-                //TODO Send a message to user when bot is shutdown
+                //TODO Fix start and stop for different cd keys
                 case "/stopbot":
-                    InitializeBotShutdownProcedure();
+                    //InitializeBotShutdownProcedure();
                     Console.WriteLine("Bot Shutdown");
-                    break;
-                //TODO Send a message to user when bot is started
+                    break;                
                 case "/startbot":
                     Console.WriteLine("Bot Starting...");
-                    InitializeBotResumeProcedure();
+                    //InitializeBotResumeProcedure();
                     Console.WriteLine("Bot Started");                                    
                     break;
                 case "/time":                
@@ -427,6 +441,7 @@ namespace DiabloBot
             if (!profile.Schedule.Equals(pScheduleName) || String.IsNullOrEmpty(profile.Schedule)) profile.Schedule = pScheduleName;
 
             //Save back the updates
+            //TODO it doesnt work with 1+ profile
             string json = JsonConvert.SerializeObject(profile);
             File.WriteAllText(data.PathToJsonProfile, json);
                         
