@@ -14,6 +14,8 @@ namespace DiabloBot
 {
     class Gator
     {
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
         enum ELevel : long
         {
             dieci = 57715,
@@ -39,7 +41,7 @@ namespace DiabloBot
         public TelegramBotClient bot;
         public Data data;
         public DiabloChecker diabloChecker;
-        public Keyboards keyboards = new Keyboards();
+        public Keyboards keyboards;
         public Profile profile;
         public bool isFirstMessageArrived = false;
         public int seconds = 60000; // Default 5 mins. 1 sec => 1000        
@@ -48,14 +50,20 @@ namespace DiabloBot
 
         public async Task ExecuterAsync()
         {
-            //Init user data
-            data = new Data();            
-
-            bot = data.Initialize();            
-
-            bot.OnMessage += BotOnMessageReceived;
-            bot.OnCallbackQuery += BotOnCallbackQueryReceived;
-            bot.StartReceiving(Array.Empty<UpdateType>());
+            //Init all objects
+            data = new Data();                       
+            diabloChecker = new DiabloChecker(data);
+            keyboards = new Keyboards();
+            profile = new Profile();
+            
+            //Init bot
+            bot = data.Initialize();
+            if (bot != null)
+            {
+                bot.OnMessage += BotOnMessageReceived;
+                bot.OnCallbackQuery += BotOnCallbackQueryReceived;
+                bot.StartReceiving(Array.Empty<UpdateType>());
+            }
 
             if (data.UserChatId <= 0)
             {
@@ -64,6 +72,7 @@ namespace DiabloBot
                 {
                     Console.WriteLine("Waiting for message...");
                     await Task.Delay(5000);
+                
                 }
                 //Save the new data in the config.json
                 SaveOnFile();
@@ -173,7 +182,7 @@ namespace DiabloBot
         private void SaveOnFile()
         {
             // Create a string from json
-            string line = JsonConvert.SerializeObject(data);
+            string line = JsonConvert.SerializeObject(data, Formatting.Indented);
 
             // Set a variable to the Documents path.
             string directory = AppDomain.CurrentDomain.BaseDirectory;
@@ -195,7 +204,14 @@ namespace DiabloBot
         private Dictionary<string, long> GetAllLevels()
         {
             Dictionary<string, long> tmp = new Dictionary<string, long>();
-
+            tmp.Add("10", (long)ELevel.dieci);
+            tmp.Add("20", (long)ELevel.venti);
+            tmp.Add("30", (long)ELevel.trenta);
+            tmp.Add("40", (long)ELevel.quaranta);
+            tmp.Add("50", (long)ELevel.cinquanta);
+            tmp.Add("60", (long)ELevel.sessanta);
+            tmp.Add("70", (long)ELevel.settanta);
+            tmp.Add("80", (long)ELevel.ottanta);
             tmp.Add("90", (long)ELevel.novanta);
             tmp.Add("91", (long)ELevel.novantuno);
             tmp.Add("92", (long)ELevel.novantadue);
@@ -234,33 +250,33 @@ namespace DiabloBot
                         replyMarkup: keyboards.TimeIK());
                     break;
                 case "/5min":
-                    seconds = minute * 5;
-                    await bot.AnswerCallbackQueryAsync(callbackQuery.Id, $"5 minutes set");
+                    seconds *= 5;
+                    await bot.AnswerCallbackQueryAsync(callbackQuery.Id, $"5 minutes set", true);
                     Console.WriteLine(currentTimer + seconds);
                     break;
                 case "/10min":
-                    seconds = minute * 10;
-                    await bot.AnswerCallbackQueryAsync(callbackQuery.Id, $"10 minutes set");
+                    seconds *= 10;
+                    await bot.AnswerCallbackQueryAsync(callbackQuery.Id, $"10 minutes set", true);
                     Console.WriteLine(currentTimer + seconds);
                     break;
                 case "/15min":
-                    seconds = minute * 15;
-                    await bot.AnswerCallbackQueryAsync(callbackQuery.Id, $"15 minutes set");
+                    seconds *= 15;
+                    await bot.AnswerCallbackQueryAsync(callbackQuery.Id, $"15 minutes set", true);
                     Console.WriteLine(currentTimer + seconds);
                     break;
                 case "/20min":
-                    seconds = minute * 20;
-                    await bot.AnswerCallbackQueryAsync(callbackQuery.Id, $"20 minutes set");
+                    seconds *= 20;
+                    await bot.AnswerCallbackQueryAsync(callbackQuery.Id, $"20 minutes set", true);
                     Console.WriteLine(currentTimer + seconds);
                     break;
                 case "/30min":
-                    seconds = minute * 30;
-                    await bot.AnswerCallbackQueryAsync(callbackQuery.Id, $"30 minutes set");
+                    seconds *= 30;
+                    await bot.AnswerCallbackQueryAsync(callbackQuery.Id, $"30 minutes set", true);
                     Console.WriteLine(currentTimer + seconds);
                     break;
                 case "/60min":
-                    seconds = minute * 60;
-                    await bot.AnswerCallbackQueryAsync(callbackQuery.Id, $"60 minutes set");
+                    seconds *= 60;
+                    await bot.AnswerCallbackQueryAsync(callbackQuery.Id, $"60 minutes set", true);
                     Console.WriteLine(currentTimer + seconds);
                     break;
                 case "/options":
@@ -323,15 +339,7 @@ namespace DiabloBot
                     data.UserChatId = callbackQuery.From.Id;                    
                     await bot.AnswerCallbackQueryAsync(callbackQuery.Id, $"NO COMMAND FOUND");
                     break;
-            }
-            
-            //await bot.EditMessageReplyMarkupAsync(callbackQuery.Message.Chat.Id, callbackQuery.Message.MessageId, replyKeyboard);
-            // This is a pop sent to user
-            //await bot.AnswerCallbackQueryAsync(
-            //    callbackQuery.Id,
-            //    $"POPUP Received {callbackQuery.Data}");
-            // This is a message sent to user
-            //await Bot.SendTextMessageAsync(callbackQuery.Message.Chat.Id, $"Received {callbackQuery.Data}");
+            }            
         }
 
         private async void BotOnMessageReceived(object sender, MessageEventArgs messageEventArgs)
@@ -431,8 +439,8 @@ namespace DiabloBot
                     //TODO Screenshot
                     break;
                     */
-                default:
-                    if(message.From.Username != null)
+                default:                    
+                    if (message.From.Username != null)
                         await bot.SendTextMessageAsync(message.Chat.Id, "Hey " + message.From.Username + ", Im super busy watching your diablo bot, can't chat right now!");                    
                     else
                         await bot.SendTextMessageAsync(message.Chat.Id, "Hey " + message.From.FirstName + ", Im super busy watching your diablo bot, can't chat right now!");
@@ -622,7 +630,10 @@ namespace DiabloBot
                 //Increment level on file       
                 try
                 {
-                    File.WriteAllText(data.PathStatus, JsonConvert.SerializeObject(check.botStatus));
+                    foreach (var item in data.PathStatus)
+                    {
+                        File.WriteAllText(item, JsonConvert.SerializeObject(check.botStatus));
+                    }
                 }
                 catch (Exception e)
                 {

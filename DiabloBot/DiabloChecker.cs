@@ -10,6 +10,7 @@ namespace DiabloBot
         public Data data { get; set; }
         public BotStatus botStatus { get; set; }
         public bool IsLevelEnabled { get; set; } = false;
+        public string myPath { get; set; }
         
         public DiabloChecker(Data paths)
         {
@@ -22,7 +23,7 @@ namespace DiabloBot
             try
             {
                 Console.WriteLine("Reading status from: " + data.PathStatus);
-                botStatus = JsonConvert.DeserializeObject<BotStatus>(File.ReadAllText(data.PathStatus));
+                //botStatus = JsonConvert.DeserializeObject<BotStatus>(File.ReadAllText(data.PathStatus));
                 Console.WriteLine("Data read");
             }
             catch
@@ -37,23 +38,23 @@ namespace DiabloBot
         {
             if (botStatus != null)
             {                 
-                BotStatus tmp = JsonConvert.DeserializeObject<BotStatus>(File.ReadAllText(data.PathStatus));
+                //BotStatus tmp = JsonConvert.DeserializeObject<BotStatus>(File.ReadAllText(data.PathStatus));
 
-                if (botStatus.Experience != tmp.Experience)
-                {
-                    botStatus.Experience = tmp.Experience;
-                    return Tuple.Create("EXP", (bool)true);
-                }
-                if (botStatus.Deaths != tmp.Deaths)
-                {
-                    botStatus.Deaths = tmp.Deaths;
-                    return Tuple.Create("DEATH", (bool)true);
-                }
-                if (botStatus.Level != tmp.Level)
-                {
-                    botStatus.Level = tmp.Level;
-                    return Tuple.Create("LVLUP", (bool)true);
-                }                
+                //if (botStatus.Experience != tmp.Experience)
+                //{
+                //    botStatus.Experience = tmp.Experience;
+                //    return Tuple.Create("EXP", (bool)true);
+                //}
+                //if (botStatus.Deaths != tmp.Deaths)
+                //{
+                //    botStatus.Deaths = tmp.Deaths;
+                //    return Tuple.Create("DEATH", (bool)true);
+                //}
+                //if (botStatus.Level != tmp.Level)
+                //{
+                //    botStatus.Level = tmp.Level;
+                //    return Tuple.Create("LVLUP", (bool)true);
+                //}                
             }
             return Tuple.Create("", false);
         }

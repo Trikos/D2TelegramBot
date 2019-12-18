@@ -10,7 +10,7 @@ namespace DiabloBot
 {
     class Program
     {
-        public static Data data = new Data();
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();        
 
         //Thanks to:
         //Kapatona to help me find the function to log .png of item picked up
