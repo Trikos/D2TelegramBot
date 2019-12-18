@@ -16,6 +16,14 @@ namespace DiabloBot
     {
         enum ELevel : long
         {
+            dieci = 57715,
+            venti = 537513,
+            trenta = 4663553,
+            quaranta = 17270791,
+            cinquanta = 47116709,
+            sessanta = 117772849,
+            settanta = 285041630,
+            ottanta = 681027665,
             novanta = 1618470619,
             novantuno = 1764543065,
             novantadue = 1923762030,
@@ -34,8 +42,7 @@ namespace DiabloBot
         public Keyboards keyboards = new Keyboards();
         public Profile profile;
         public bool isFirstMessageArrived = false;
-        public int seconds = 300000; // Default 5 mins. 1 sec => 1000
-        public readonly int minute = 60000;
+        public int seconds = 60000; // Default 5 mins. 1 sec => 1000        
 
         public long UserId { get; set; }
 
@@ -302,6 +309,9 @@ namespace DiabloBot
                     NotImplementedYet(callbackQuery);
                     break;
                 case "/status":
+                    Console.WriteLine("Button Bot Status pressed, reading status now...");
+                    diabloChecker.ReadStatus();
+                    Console.WriteLine("Editing message with new keyboard with status updated");
                     await bot.EditMessageTextAsync(
                         callbackQuery.Message.Chat.Id,
                         callbackQuery.Message.MessageId,

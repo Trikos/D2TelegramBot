@@ -53,6 +53,8 @@ namespace DiabloBot
                     PathToJsonProfile = halfPath + "\\data\\profile.json";
                     PathToSchedules = halfPath + "\\data\\schedules.json";
 
+                    //TODO Questo passaggio si puo' togliere perche' il nome e' contenuto in \data\profile.json
+                    //Nella lista, tra gli ultimi parametri c'e' il nome, quindi GG
                     Console.WriteLine("Insert the exact name (case-sensitive) of the profile used in D2Bot.\n(The name under the tab \"Profile\" near \"Status\", \"Runs\", \"Exits\". etc");
                     string profileName = Console.ReadLine();
                     PathStatus = halfPath + "\\d2bs\\kolbot\\data\\" + profileName + ".json";

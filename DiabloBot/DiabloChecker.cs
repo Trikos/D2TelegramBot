@@ -21,9 +21,15 @@ namespace DiabloBot
             //Read char status (exp, death, level)
             try
             {
-                botStatus = JsonConvert.DeserializeObject<BotStatus>(File.ReadAllText(data.PathStatus));                
+                Console.WriteLine("Reading status from: " + data.PathStatus);
+                botStatus = JsonConvert.DeserializeObject<BotStatus>(File.ReadAllText(data.PathStatus));
+                Console.WriteLine("Data read");
             }
-            catch { return; }
+            catch
+            {
+                Console.WriteLine("Error reading status from: " + data.PathStatus);
+                return;
+            }
         }
 
         //If status read are differents update me
